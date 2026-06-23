@@ -92,11 +92,16 @@ export default function Hero() {
 
         {/* Product UI mock */}
         <motion.div
-          initial={{ opacity: 0, y: 30, rotateX: 6 }}
-          animate={{ opacity: 1, y: 0, rotateX: 0 }}
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.35, duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
-          className="relative [perspective:1400px]"
+          className="relative"
         >
+          {/* glow halo behind the card */}
+          <div
+            aria-hidden
+            className="pointer-events-none absolute -inset-6 -z-10 rounded-[2rem] bg-[radial-gradient(60%_60%_at_70%_20%,rgba(99,102,241,0.40),transparent_70%),radial-gradient(50%_50%_at_20%_90%,rgba(45,212,191,0.25),transparent_70%)] blur-2xl"
+          />
           <ProductMock />
         </motion.div>
       </div>
@@ -106,28 +111,36 @@ export default function Hero() {
 
 function ProductMock() {
   return (
-    <div className="card relative overflow-hidden p-0 shadow-glow">
+    <div className="relative overflow-hidden rounded-xl2 border border-white/15 bg-ink-850/95 shadow-glow backdrop-blur-sm ring-1 ring-white/5">
+      {/* top sheen */}
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/40 to-transparent"
+      />
+
       {/* window chrome */}
-      <div className="flex items-center gap-2 border-b border-white/[0.06] bg-white/[0.02] px-4 py-3">
-        <span className="h-2.5 w-2.5 rounded-full bg-white/15" />
-        <span className="h-2.5 w-2.5 rounded-full bg-white/15" />
-        <span className="h-2.5 w-2.5 rounded-full bg-white/15" />
-        <span className="ml-3 rounded-md bg-white/[0.04] px-2.5 py-1 font-mono text-[11px] text-mist-400">
+      <div className="flex items-center gap-2 border-b border-white/10 bg-white/[0.04] px-4 py-3">
+        <span className="h-3 w-3 rounded-full bg-[#ff5f57]" />
+        <span className="h-3 w-3 rounded-full bg-[#febc2e]" />
+        <span className="h-3 w-3 rounded-full bg-[#28c840]" />
+        <span className="ml-3 truncate rounded-md border border-white/10 bg-ink-900/80 px-2.5 py-1 font-mono text-[11px] text-mist-300">
           app.aerolith.ai / agents / claims-triage
         </span>
-        <span className="ml-auto inline-flex items-center gap-1.5 rounded-full bg-teal-500/10 px-2.5 py-1 text-[11px] font-medium text-teal-300">
+        <span className="ml-auto inline-flex items-center gap-1.5 rounded-full bg-teal-500/15 px-2.5 py-1 text-[11px] font-medium text-teal-300 ring-1 ring-teal-400/30">
           <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-teal-400" /> Live
         </span>
       </div>
 
-      <div className="grid grid-cols-[1fr] gap-0 sm:grid-cols-[150px_1fr]">
+      <div className="grid grid-cols-[1fr] gap-0 sm:grid-cols-[148px_1fr]">
         {/* sidebar */}
-        <div className="hidden flex-col gap-1 border-r border-white/[0.06] p-3 sm:flex">
+        <div className="hidden flex-col gap-1 border-r border-white/10 bg-white/[0.02] p-3 sm:flex">
           {['Overview', 'Agents', 'Datasets', 'Evals', 'Audit log', 'Access'].map((it, i) => (
             <div
               key={it}
-              className={`rounded-lg px-3 py-2 text-[13px] ${
-                i === 1 ? 'bg-iris-500/15 text-white' : 'text-mist-400'
+              className={`rounded-lg px-3 py-2 text-[13px] transition-colors ${
+                i === 1
+                  ? 'bg-iris-500/25 font-medium text-white ring-1 ring-iris-400/40'
+                  : 'text-mist-300'
               }`}
             >
               {it}
@@ -142,7 +155,7 @@ function ProductMock() {
               <div className="text-sm font-semibold text-white">Claims Triage Agent</div>
               <div className="font-mono text-[11px] text-mist-400">grounded · 14 sources · v3.2</div>
             </div>
-            <div className="rounded-full bg-white/[0.04] px-2.5 py-1 text-[11px] text-mist-300">
+            <div className="rounded-full border border-teal-400/30 bg-teal-500/10 px-2.5 py-1 text-[11px] font-medium text-teal-200">
               Confidence 98.4%
             </div>
           </div>
@@ -150,54 +163,65 @@ function ProductMock() {
           {/* mini metrics */}
           <div className="grid grid-cols-3 gap-2">
             {[
-              { k: 'Resolved / hr', v: '1,284' },
-              { k: 'Avg latency', v: '420 ms' },
-              { k: 'Escalations', v: '2.1%' },
+              { k: 'Resolved / hr', v: '1,284', d: '+12%' },
+              { k: 'Avg latency', v: '420 ms', d: '-8%' },
+              { k: 'Escalations', v: '2.1%', d: '-0.4%' },
             ].map((m) => (
-              <div key={m.k} className="rounded-lg border border-white/[0.06] bg-white/[0.02] p-2.5">
+              <div
+                key={m.k}
+                className="rounded-lg border border-white/10 bg-white/[0.05] p-2.5"
+              >
                 <div className="text-[10px] uppercase tracking-wide text-mist-400">{m.k}</div>
-                <div className="mt-1 text-base font-semibold text-white">{m.v}</div>
+                <div className="mt-1 flex items-baseline gap-1.5">
+                  <span className="text-base font-semibold text-white">{m.v}</span>
+                  <span className="text-[10px] font-medium text-teal-300">{m.d}</span>
+                </div>
               </div>
             ))}
           </div>
 
-          {/* sparkline */}
-          <div className="mt-3 rounded-lg border border-white/[0.06] bg-white/[0.02] p-3">
-            <div className="mb-2 flex items-center justify-between text-[11px] text-mist-400">
-              <span>Throughput · last 24h</span>
-              <span className="text-teal-300">▲ 18%</span>
+          {/* sparkline / area chart */}
+          <div className="mt-3 rounded-lg border border-white/10 bg-white/[0.04] p-3">
+            <div className="mb-2 flex items-center justify-between text-[11px]">
+              <span className="text-mist-300">Throughput · last 24h</span>
+              <span className="font-medium text-teal-300">▲ 18%</span>
             </div>
-            <svg viewBox="0 0 300 70" className="h-16 w-full" preserveAspectRatio="none">
+            <svg viewBox="0 0 300 80" className="h-20 w-full" preserveAspectRatio="none">
               <defs>
                 <linearGradient id="spark" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="0" stopColor="#818cf8" stopOpacity="0.45" />
+                  <stop offset="0" stopColor="#818cf8" stopOpacity="0.55" />
                   <stop offset="1" stopColor="#818cf8" stopOpacity="0" />
                 </linearGradient>
               </defs>
+              {/* gridlines */}
+              {[20, 40, 60].map((y) => (
+                <line key={y} x1="0" y1={y} x2="300" y2={y} stroke="#ffffff" strokeOpacity="0.06" strokeWidth="1" />
+              ))}
               <path
-                d="M0 55 L25 48 L50 52 L75 38 L100 42 L125 30 L150 33 L175 22 L200 26 L225 16 L250 20 L275 10 L300 14 L300 70 L0 70 Z"
+                d="M0 62 L25 54 L50 58 L75 42 L100 47 L125 33 L150 36 L175 24 L200 28 L225 17 L250 21 L275 11 L300 15 L300 80 L0 80 Z"
                 fill="url(#spark)"
               />
               <path
-                d="M0 55 L25 48 L50 52 L75 38 L100 42 L125 30 L150 33 L175 22 L200 26 L225 16 L250 20 L275 10 L300 14"
+                d="M0 62 L25 54 L50 58 L75 42 L100 47 L125 33 L150 36 L175 24 L200 28 L225 17 L250 21 L275 11 L300 15"
                 fill="none"
                 stroke="#a5b4ff"
-                strokeWidth="2"
+                strokeWidth="2.5"
                 strokeLinecap="round"
                 strokeLinejoin="round"
               />
+              <circle cx="275" cy="11" r="3.5" fill="#a5b4ff" stroke="#0e1119" strokeWidth="2" />
             </svg>
           </div>
 
           {/* governed response row */}
-          <div className="mt-3 flex items-start gap-2.5 rounded-lg border border-white/[0.06] bg-white/[0.02] p-3">
+          <div className="mt-3 flex items-start gap-2.5 rounded-lg border border-iris-400/25 bg-iris-500/[0.08] p-3">
             <div className="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-md bg-gradient-to-br from-iris-400 to-teal-400 text-[11px] font-bold text-ink-950">
               A
             </div>
-            <div className="text-[12.5px] leading-relaxed text-mist-200">
-              Routed to <span className="text-white">Tier-2 adjuster</span> — policy match on
+            <div className="text-[12.5px] leading-relaxed text-mist-100">
+              Routed to <span className="font-medium text-white">Tier-2 adjuster</span> — policy match on
               clauses 4.2, 7.1.{' '}
-              <span className="rounded bg-iris-500/15 px-1.5 py-0.5 font-mono text-[11px] text-iris-300">
+              <span className="rounded bg-iris-500/25 px-1.5 py-0.5 font-mono text-[11px] text-iris-200 ring-1 ring-iris-400/30">
                 cited · 3 docs
               </span>
             </div>
